@@ -1,0 +1,24 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: unset;
+    display:flex;
+    flex-direction: column;    
+}
+
+table{
+    margin:auto;
+}
+
+td{
+    padding:4px
+}
+
+section,td.price{
+    text-align: center;
+}
+
+td.price:before{
+    content:"$";
+}
