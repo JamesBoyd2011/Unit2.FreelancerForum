@@ -36,32 +36,23 @@ const occupations = [
   "Tutor",
 ];
 
-//Interval to add a freelancer to the listing every 3 seconds
-const addFreelancerInterval = setInterval(addFreelancer, 3000);
-
-// API to generate 10 random names
-
 //Defining a freelancer class
 class freelancer {
   constructor() {
     this.name = `${randomListItem(firstNames)} ${randomListItem(lastNames)}`;
     this.price = randomPrice();
     this.occupation = randomListItem(occupations);
-    freelancers.push(this)
+    freelancers.push(this);
   }
 }
 
+//Interval to add a freelancer and render listing every 3 seconds
+const addFreelancerInterval = setInterval(render, 3000);
+render();
+
 //Method to add freelancer to the listing
 function addFreelancer() {
-  if (freelancers.length <= 10) {
-    let person = new freelancer();
-    let tr = document.createElement("tr");
-    tr.innerHTML = `<td>${person.name}</td><td>${person.occupation}</td><td class='price'>${person.price}</td>`;
-    freelancersTBODY.append(tr);
-    calculateAveragePrice();
-  } else {
-    clearInterval(addFreelancerInterval);
-  }
+  let newFreeLancer = new freelancer();
 }
 
 //Method to generate a random price between 30 & 80
@@ -78,10 +69,26 @@ function randomListItem(array = []) {
 function calculateAveragePrice() {
   let sum = 0;
   let prices = document.getElementsByClassName("price");
-  [...prices].forEach((price) => {
-    sum += Number(price.innerText);
+  if (prices.length) {
+    [...prices].forEach((price) => {
+      sum += Number(price.innerText);
+    });
+    averagePriceDOM.innerHTML = `The average starting price is $${(
+      sum / prices.length
+    ).toPrecision(4)}`;
+  }
+}
+
+function render() {
+  addFreelancer();
+  if (freelancers.length >= 10) {
+    clearInterval(addFreelancerInterval);
+  }
+  freelancersTBODY.innerHTML = "";
+  freelancers.forEach((person) => {
+    let tr = document.createElement("tr");
+    tr.innerHTML = `<td>${person.name}</td><td>${person.occupation}</td><td class='price'>${person.price}</td>`;
+    freelancersTBODY.append(tr);
   });
-  averagePriceDOM.innerHTML = `The average starting price is $${(
-    sum / prices.length
-  ).toPrecision(4)}`;
+  calculateAveragePrice();
 }
